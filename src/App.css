@@ -5,3 +5,7 @@
 .hidden {
   display: none !important;
 }
+
+.radio + .radio {
+    margin-left: 10px;
+}

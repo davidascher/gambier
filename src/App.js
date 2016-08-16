@@ -4,6 +4,7 @@ import 'classnames';
 import './bulma.css';
 import {authenticatedComponent, startFlow, signOut } from './firebaseUtils.js'
 import { bindToItem } from "firebase-3-react";
+import {Router, Route, browserHistory} from "react-router";
 
 class Post extends React.Component {
   render () {
@@ -49,7 +50,7 @@ class Post extends React.Component {
           </nav>
         </div>
         <div className="media-right">
-          <a className="button is-info is-inverted">
+          <a className="button is-light">
             <span className="icon">
               <i className="fa fa-trash"></i>
             </span>
@@ -203,7 +204,7 @@ class Navbar extends Component {
 
 let AuthNavbar = authenticatedComponent(Navbar);
 
-class App extends Component {
+class Home extends Component {
   render() {
     return (
       <div>
@@ -211,9 +212,98 @@ class App extends Component {
         <section className="section is-medium">
           <div className="container is-fluid">
             <BoundCategories firebaseRef="Categories" />
+            <a className="button" href="/add">
+              <i className="fa fa-check"></i>
+              +
+            </a>
           </div>
         </section>
       </div>
+    );
+  }
+}
+
+
+class Add extends Component {
+  constructor () {
+    super()
+    this.state = {
+      'section': '',
+      'subject': '',
+      'body': ''
+    }
+  }
+  cancel () {
+    window.history.back();
+  }
+
+  submit () {
+    console.log(this.state.section)
+  }
+
+  handleSectionChange (event) {
+    this.setState({section: event.target.value});
+  }
+
+  render() {
+    return (
+      <div>
+        <AuthNavbar />
+        <div className="section">
+        <div className="container is-fluid">
+            <section className="hero is-medium is-danger is-bold">
+              <div className="hero-body">
+                <div className="container">
+                  <h1 className="title">
+                    Add your two bits
+                  </h1>
+                  <h2 className="subtitle">
+                    Be kind, rewind
+                  </h2>
+                </div>
+              </div>
+            </section>
+          <section className="section">
+            <label className="label">Section</label>
+            <p className="control">
+              <span className="select">
+                <select value={this.state.section}
+                  onChange={this.handleSectionChange.bind(this)}>
+                  <option value="">Select Dropdown</option>
+                  <option value="news">Announcements</option>
+                  <option value="free">Free Stuff</option>
+                  <option value="forsale">For Sale</option>
+                  <option value="forbuy">Looking for…</option>
+                </select>
+              </span>
+            </p>
+            <label className="label">Post Title</label>
+            <p className="control">
+              <input className="input" type="text" placeholder="Make it relevant" />
+            </p>
+            <label className="label">Post Content</label>
+            <p className="control">
+              <textarea className="textarea" placeholder="Make it interesting"></textarea>
+            </p>
+            <p className="control">
+              <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
+              <button className="button is-link" onClick={this.cancel.bind(this)}>Cancel</button>
+            </p>
+          </section>
+        </div>
+      </div>
+      </div>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <Router history={browserHistory}>
+        <Route path="/" component={Home} />
+        <Route path="/add" component={Add} />
+      </Router>
     );
   }
 }
