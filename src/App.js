@@ -4,7 +4,7 @@ import 'classnames';
 import './bulma.css';
 import {authenticatedComponent, startFlow, signOut } from './firebaseUtils.js'
 import { bindToItem } from "firebase-3-react";
-import {Router, Route, browserHistory} from "react-router";
+import {Router, Route, browserHistory, IndexRoute, Link } from "react-router";
 
 class Post extends React.Component {
   render () {
@@ -54,7 +54,7 @@ class Post extends React.Component {
             <span className="icon">
               <i className="fa fa-trash"></i>
             </span>
-            <span className="is-hidden-mobile" >Ignore</span>
+            <span className="is-hidden-mobile" >Hide</span>
           </a>
         </div>
       </article>
@@ -83,14 +83,9 @@ class PostList extends React.Component {
      });
 
      return (
-       <div>
-         <hr />
-         <div className="title is-3">{this.props.label}</div>
-         <div className="title is-5">{this.props.subtitle}</div>
-         <div className="box">
+        <div className="container is-fluid box">
           {items}
-         </div>
-       </div>
+        </div>
      )
   }
 }
@@ -127,6 +122,143 @@ Categories.propTypes = {
 const BoundCategories = bindToItem(Categories);
 
 
+class News extends Component {
+  render () {
+    return (
+      <section>
+        <div className="hero is-medium is-success is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Island News
+              </h1>
+              <h2 className="subtitle">
+                what's happening?
+              </h2>
+            </div>
+          </div>
+        </div>
+        <BoundPostList label='News' firebaseRef='posts/news' />      
+      </section>
+    )
+  }
+}
+
+
+class Ferry extends Component {
+  render () {
+    return (
+      <section>
+        <div className="hero is-medium is-danger is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Ferry Information
+              </h1>
+              <h2 className="subtitle">
+                best effort information
+              </h2>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+}
+
+
+class ForSale extends Component {
+  render () {
+    return (
+      <section>
+        <div className="hero is-medium is-primary is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Stuff for sale
+              </h1>
+              <h2 className="subtitle">
+                only the best
+              </h2>
+            </div>
+          </div>
+        </div>
+        <BoundPostList label='For Sale' firebaseRef='posts/forsale' />      
+      </section>
+    )
+  }
+}
+
+
+class Free extends Component {
+  render () {
+    return (
+      <section>
+        <div className="hero is-medium is-info is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Free stuff!
+              </h1>
+              <h2 className="subtitle">
+                reduce, reuse, <em>recycle!</em>
+              </h2>
+            </div>
+          </div>
+        </div>
+        <BoundPostList label='Free Stuff' firebaseRef='posts/freestuff' />      
+      </section>
+    )
+  }
+}
+
+
+class ToBuy extends Component {
+  render () {
+    return (
+      <section>
+        <div className="hero is-medium is-warning is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Goods and Services people are looking to buy
+              </h1>
+              <h2 className="subtitle">
+                barter is ok!
+              </h2>
+            </div>
+          </div>
+        </div>
+        <BoundPostList label='To Buy' firebaseRef='posts/forbuy' />      
+      </section>
+    )
+  }
+}
+
+
+
+class Links extends Component {
+  render () {
+    return (
+      <section>
+        <div className="hero is-medium is-light is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Useful links
+              </h1>
+              <h2 className="subtitle">
+                like Yahoo! used to be
+              </h2>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+}
+
+
 class Navbar extends Component {
   constructor () {
     super()
@@ -150,7 +282,7 @@ class Navbar extends Component {
   }
 
   renderSignIn () { 
-    if (this.props.user) {
+    if (this.props.user || this.state.showWidget) {
       return (<div />);
     }
     else {
@@ -201,9 +333,9 @@ class Navbar extends Component {
         <div className="hero-head">
           <nav className="nav has-shadow">
             <div className="nav-left">
-              <a className="nav-item title is-2 is-brand" href="#">
+              <Link to="/" className="nav-item title is-4 is-brand">
                 Gambier Island Club
-              </a>
+              </Link>
             </div>
 
             <div className="nav-right">
@@ -220,83 +352,100 @@ class Navbar extends Component {
 
 let AuthNavbar = authenticatedComponent(Navbar);
 
+class Layout extends Component {
+  render () {
+    return (
+      <div>
+        <AuthNavbar />
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
 class Home extends Component {
   render() {
     return (
       <div>
-        <AuthNavbar />
-        <section className="hero is-medium is-dark is-bold">
-          <div className="hero-body">
+        <section className="welcome-image">
             <div className="container">
-              <h1 className="title">
-                Sell, buy, trade, give
+              <h1 className="title home-title">
+                Free stuff, buy & sell, and the <em>best</em> ferry schedule
               </h1>
-              <h2 className="subtitle">
-                <i>lean on me, when you're not strong</i>
+              <h2 className="subtitle home-subtitle">
+                <i>Gambierites helping each other out</i>
               </h2>
             </div>
-          </div>
         </section>
         <section className="section is-medium">
           <div className="container is-fluid">
             <div className="columns">
               <div className="column">
-                <a href="#">
-                  <p className="notification is-danger">
-                    Ferry Updates
+                <Link to="/ferry">
+                  <p className="notification is-danger is-heavy">
+                    Stormaway & Ferry Schedule
                   </p>
-                </a>
+                </Link>
               </div>
               <div className="column">
-                <p className="notification is-info">
-                Free Stuff
-                </p>
+                <Link to="/free">
+                  <p className="notification is-info is-heavy">
+                  Free Stuff
+                  </p>
+                </Link>
               </div>
               <div className="column">
-                <p className="notification is-primary">
-                For Sale
-                </p>
+                <Link to="/forsale">
+                  <p className="notification is-primary is-heavy">
+                  For Sale
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="columns">
               <div className="column">
-                <p className="notification is-dark">
-                News
-                </p>
+                <Link to="/news">
+                  <p className="notification is-success is-heavy">
+                    News
+                  </p>
+                </Link>
               </div>
               <div className="column">
-                <p className="notification is-warning">
-                Looking for…
-                </p>
+                <Link to="/tobuy">
+                  <p className="notification is-warning is-heavy">
+                  Looking to buy
+                  </p>
+                </Link>
               </div>
               <div className="column">
-                <p className="notification is-light">
-                Useful Links
-                </p>
+                <Link to="/links">
+                  <p className="notification is-light is-heavy">
+                  Useful Links
+                  </p>
+                </Link>
               </div>
-            </div>
-
-
-
-            <BoundCategories firebaseRef="sectionsMeta" />
-            <div className="control is-grouped">
-            <p className="control">
-              <a className="button" href="/add">
-                <span className="icon">
-                  <i className="fa fa-plus"></i>
-                </span>
-                <span> add post</span>
-              </a>
-              </p>
             </div>
           </div>
-
         </section>
       </div>
     );
   }
 }
 
+
+
+
+            // <BoundCategories firebaseRef="sectionsMeta" />
+            // <div className="control is-grouped">
+            // <p className="control">
+            //   <a className="button" href="/add">
+            //     <span className="icon">
+            //       <i className="fa fa-plus"></i>
+            //     </span>
+            //     <span> add post</span>
+            //   </a>
+            //   </p>
+            // </div>
 
 // XXX Add an optional picture
 // XXX Add an optional location on the island
@@ -405,8 +554,16 @@ class App extends Component {
   render() {
     return (
       <Router history={browserHistory}>
-        <Route path="/" component={Home} />
-        <Route path="/add" component={AuthenticatedAdd} />
+        <Route path="/" component={Layout}>
+          <IndexRoute component={Home} />
+          <Route path="ferry" component={Ferry} />
+          <Route path="news" component={News} />
+          <Route path="free" component={Free} />
+          <Route path="forsale" component={ForSale} />
+          <Route path="tobuy" component={ToBuy} />
+          <Route path="links" component={Links} />
+          <Route path="add" component={AuthenticatedAdd} />
+        </Route>
       </Router>
     );
   }

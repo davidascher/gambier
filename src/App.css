@@ -1,12 +1,16 @@
-@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
-
+@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:400,700';
 
 * {
-  font-family: "Open Sans";
+  font-family: "Helvetica Neue";
+}
+
+.is-heavy {
+  font-weight: 700;
 }
 
 .is-brand {
   font-family: 'Open Sans Condensed';
+  font-weight: 700;
 }
 
 .hidden {
@@ -15,4 +19,19 @@
 
 .radio + .radio {
     margin-left: 10px;
+}
+
+.welcome-image {
+  background-image: url('/images/dock_dark.jpg'); 
+  background-size: cover;
+  min-height: 8em;
+  padding: 2em;
+}
+
+.title.home-title {
+  color: white;
+}
+.subtitle.home-subtitle {
+  color: white;
+  padding-bottom: 3em;
 }
