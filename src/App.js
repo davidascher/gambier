@@ -17,9 +17,9 @@ class Post extends React.Component {
         </div>
         <div className="media-content">
           <div className="content">
-            <p><strong>
-            {this.props.poster}
-            </strong></p>
+            <p>
+              <strong>{this.props.subject}</strong> <i>(by {this.props.poster})</i>
+            </p> 
           </div>
           <div className="content">
             {this.props.body}
@@ -64,20 +64,29 @@ class Post extends React.Component {
 
 Post.propTypes = {
   poster: React.PropTypes.string.isRequired,
+  subject: React.PropTypes.string.isRequired,
   body: React.PropTypes.string.isRequired
 };
 
-class Category extends React.Component {
+class PostList extends React.Component {
    render () {
-     const posts = this.props.Items;
+     const posts = this.props.data;
+     console.log("posts", posts)  
+     if (! posts) {
+      return (<div />)
+     }  
+    //  const posts = this.props.items;
      let items = Object.keys(posts).map((id: string) => {
        const post = posts[id];
-       return <Post key={id} poster={post.poster} body={post.body} />
+       console.log("POST", post)
+       return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} />
      });
 
      return (
        <div>
-         <div className="subtitle is-5">{this.props.Label}</div>
+         <hr />
+         <div className="title is-3">{this.props.label}</div>
+         <div className="title is-5">{this.props.subtitle}</div>
          <div className="box">
           {items}
          </div>
@@ -86,12 +95,13 @@ class Category extends React.Component {
   }
 }
 
-Category.propTypes = {
-  Label: React.PropTypes.string.isRequired,
-  Items: React.PropTypes.array.isRequired
+PostList.propTypes = {
+  label: React.PropTypes.string.isRequired,
+  data: React.PropTypes.object.isRequired
 };
 
-// const BoundCategory = bindToItem(Category);
+const BoundPostList = bindToItem(PostList);
+
 
 const Categories = class extends React.Component {
   render() {
@@ -102,14 +112,16 @@ const Categories = class extends React.Component {
     const categories = this.props.data;
     return Object.keys(categories).map((id) => {
       const category = categories[id];
+      const categoryRef = 'posts/'+id
 
-      return <Category key={id} Label={category.Label} Items={category.Items}></Category>;
+      return <BoundPostList key={id} label={category.label} firebaseRef={categoryRef} />
+      // return <Category key={id} label={category.label} items={category.items}></Category>;
     });
   }
 };
 
 Categories.propTypes = {
-  data: React.PropTypes.arrayOf(React.PropTypes.object),
+  data: React.PropTypes.object,
 };
 
 const BoundCategories = bindToItem(Categories);
@@ -158,7 +170,7 @@ class Navbar extends Component {
     if (this.props.user) {
       let displayName = this.props.user.displayName;
       return (
-        <a id="sign-out" className="button is-primary" href="#" onClick={this.signout.bind(this)}>
+        <a id="sign-out" className="button is-light" href="#" onClick={this.signout.bind(this)}>
           <span id="sign-out-label"><span className="is-hidden-mobile">{displayName}: </span>Sign out</span>
           <span className="icon">
             <i className="fa fa-sign-out"></i>
@@ -185,19 +197,23 @@ class Navbar extends Component {
     let signout = this.renderSignOut()
     let widget = this.renderWidget()
     return (
-      <nav className="nav">
-        <div className="nav-left">
-          <a className="nav-item title is-3 is-brand is-primary" href="#">
-            Gambier Club
-          </a>
-        </div>
+      <div className="hero is-light">
+        <div className="hero-head">
+          <nav className="nav has-shadow">
+            <div className="nav-left">
+              <a className="nav-item title is-2 is-brand" href="#">
+                Gambier Island Club
+              </a>
+            </div>
 
-        <div className="nav-right">
-          <span className="nav-item">
-            {signin}{signout}{widget}
-          </span>
+            <div className="nav-right">
+              <span className="nav-item">
+                {signin}{signout}{widget}
+              </span>
+            </div>
+          </nav>
         </div>
-      </nav>
+      </div>
     )
   }
 }
@@ -208,21 +224,83 @@ class Home extends Component {
   render() {
     return (
       <div>
-      <AuthNavbar />
+        <AuthNavbar />
+        <section className="hero is-medium is-dark is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">
+                Sell, buy, trade, give
+              </h1>
+              <h2 className="subtitle">
+                <i>lean on me, when you're not strong</i>
+              </h2>
+            </div>
+          </div>
+        </section>
         <section className="section is-medium">
           <div className="container is-fluid">
-            <BoundCategories firebaseRef="Categories" />
-            <a className="button" href="/add">
-              <i className="fa fa-check"></i>
-              +
-            </a>
+            <div className="columns">
+              <div className="column">
+                <a href="#">
+                  <p className="notification is-danger">
+                    Ferry Updates
+                  </p>
+                </a>
+              </div>
+              <div className="column">
+                <p className="notification is-info">
+                Free Stuff
+                </p>
+              </div>
+              <div className="column">
+                <p className="notification is-primary">
+                For Sale
+                </p>
+              </div>
+            </div>
+            <div className="columns">
+              <div className="column">
+                <p className="notification is-dark">
+                News
+                </p>
+              </div>
+              <div className="column">
+                <p className="notification is-warning">
+                Looking for…
+                </p>
+              </div>
+              <div className="column">
+                <p className="notification is-light">
+                Useful Links
+                </p>
+              </div>
+            </div>
+
+
+
+            <BoundCategories firebaseRef="sectionsMeta" />
+            <div className="control is-grouped">
+            <p className="control">
+              <a className="button" href="/add">
+                <span className="icon">
+                  <i className="fa fa-plus"></i>
+                </span>
+                <span> add post</span>
+              </a>
+              </p>
+            </div>
           </div>
+
         </section>
       </div>
     );
   }
 }
 
+
+// XXX Add an optional picture
+// XXX Add an optional location on the island
+// XXX Add an optional emoji/fa-icon
 
 class Add extends Component {
   constructor () {
@@ -239,10 +317,35 @@ class Add extends Component {
 
   submit () {
     console.log(this.state.section)
+    // eslint-disable-next-line
+    var database = firebase.database();
+    let postData = {
+      poster: this.props.user.displayName,
+      body: this.state.body,
+      uid: this.props.user.uid,
+      subject: this.state.subject
+    }
+    try {
+      let key = database.ref().child('posts').child(this.state.section).push().key;
+      console.log("KEY", key)
+      // Write the new post's data simultaneously in the posts list and the user's post list.
+      var updates = {};
+      updates[`/posts/${this.state.section}/${key}`] = postData;
+      // eslint-disable-next-line
+      return firebase.database().ref().update(updates);
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   handleSectionChange (event) {
     this.setState({section: event.target.value});
+  }
+  handleSubjectChange (event) {
+    this.setState({subject: event.target.value});
+  }
+  handleBodyChange (event) {
+    this.setState({body: event.target.value});
   }
 
   render() {
@@ -271,7 +374,7 @@ class Add extends Component {
                   onChange={this.handleSectionChange.bind(this)}>
                   <option value="">Select Dropdown</option>
                   <option value="news">Announcements</option>
-                  <option value="free">Free Stuff</option>
+                  <option value="freestuff">Free Stuff</option>
                   <option value="forsale">For Sale</option>
                   <option value="forbuy">Looking for…</option>
                 </select>
@@ -279,11 +382,11 @@ class Add extends Component {
             </p>
             <label className="label">Post Title</label>
             <p className="control">
-              <input className="input" type="text" placeholder="Make it relevant" />
+              <input className="input" type="text" placeholder="Make it relevant" onChange={this.handleSubjectChange.bind(this)} />
             </p>
             <label className="label">Post Content</label>
             <p className="control">
-              <textarea className="textarea" placeholder="Make it interesting"></textarea>
+              <textarea className="textarea" placeholder="Make it interesting" onChange={this.handleBodyChange.bind(this)} />
             </p>
             <p className="control">
               <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
@@ -296,13 +399,14 @@ class Add extends Component {
     );
   }
 }
+let AuthenticatedAdd = authenticatedComponent(Add)
 
 class App extends Component {
   render() {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Home} />
-        <Route path="/add" component={Add} />
+        <Route path="/add" component={AuthenticatedAdd} />
       </Router>
     );
   }
