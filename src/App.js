@@ -148,6 +148,7 @@ class News extends Component {
 class Ferry extends Component {
   render () {
     return (
+      <div>
       <section>
         <div className="hero is-medium is-danger is-bold">
           <div className="hero-body">
@@ -162,6 +163,71 @@ class Ferry extends Component {
           </div>
         </div>
       </section>
+      <section>
+<div className="notification title is-primary">
+<div className="container">
+  <nav className="level">
+    <div className="level-left">
+      <div className="level-item">Leaving Gambier<i className="fa fa-home"></i></div>
+    </div>
+    <div className="level-right">
+      <div className="level-item"><p><i className="fa fa-building-o"></i></p></div>
+      <div className="level-item"><p><i className="fa fa-building-o"></i></p></div>
+      <div className="level-item"><p><i className="fa fa-building-o"></i></p></div>
+    </div>
+  </nav>
+    </div>
+</div>
+<div className="notification subtitle is-warning">
+
+
+  Monday
+</div>
+<table className="table">
+  <thead>
+    <tr>
+      <th>Leave New Brighton</th>
+      <th>Leave Langdale</th>
+      <th>Arrive Horseshoe Bay</th>
+      <th>Arrive Vancouver (approx)</th>
+      <th>Layover</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th>Leave New Brighton</th>
+      <th>Layover</th>
+      <th>Leave Langdale</th>
+      <th>Arrive Horseshoe Bay</th>
+      <th>Arrive Vancouver (approx)</th>
+    </tr>
+  </tfoot>
+  <tbody>
+    <tr>
+      <td>9:30</td>
+      <td className="isicon"><a className="is-primary"><i className="fa fa-hourglass-1"></i></a></td>
+      <td>10:15</td>
+      <td>10:55</td>
+      <td>11:25</td>
+    </tr>
+    <tr>
+      <td>9:30</td>
+      <td className="isicon"><i className="fa fa-hourglass-3"></i></td>
+      <td>10:15</td>
+      <td>10:55</td>
+      <td>11:25</td>
+    </tr>
+    <tr>
+      <td>9:30</td>
+      <td className="isicon"><i className="fa fa-hourglass-2"></i></td>
+      <td>10:15</td>
+      <td>10:55</td>
+      <td>11:25</td>
+    </tr>
+  </tbody>
+</table>
+      </section>
+      </div>
     )
   }
 }
@@ -333,8 +399,11 @@ class Navbar extends Component {
         <div className="hero-head">
           <nav className="nav has-shadow">
             <div className="nav-left">
-              <Link to="/" className="nav-item title is-4 is-brand">
-                Gambier Island Club
+              <Link to="/" className="nav-item title is-3 is-brand is-hidden-touch">
+                Gambier Island Trader
+              </Link>
+              <Link to="/" className="nav-item title is-5 is-brand is-hidden-desktop">
+                Gambier Island Trader
               </Link>
             </div>
 
@@ -383,21 +452,27 @@ class Home extends Component {
               <div className="column">
                 <Link to="/ferry">
                   <p className="notification is-danger is-heavy">
-                    Stormaway & Ferry Schedule
+                  <div className="title">
+                    Ferry Schedules
+                  </div>
                   </p>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/free">
                   <p className="notification is-info is-heavy">
+                  <div className="title">
                   Free Stuff
+                  </div>
                   </p>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/forsale">
                   <p className="notification is-primary is-heavy">
+                  <div className="title">
                   For Sale
+                  </div>
                   </p>
                 </Link>
               </div>
@@ -406,21 +481,27 @@ class Home extends Component {
               <div className="column">
                 <Link to="/news">
                   <p className="notification is-success is-heavy">
+                  <div className="title">
                     News
+                  </div>
                   </p>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/tobuy">
                   <p className="notification is-warning is-heavy">
+                  <div className="title">
                   Looking to buy
+                  </div>
                   </p>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/links">
                   <p className="notification is-light is-heavy">
+                  <div className="title">
                   Useful Links
+                  </div>
                   </p>
                 </Link>
               </div>

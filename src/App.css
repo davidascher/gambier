@@ -8,9 +8,10 @@
   font-weight: 700;
 }
 
-.is-brand {
+a.is-brand {
   font-family: 'Open Sans Condensed';
   font-weight: 700;
+  margin-bottom: 5px !important;
 }
 
 .hidden {
@@ -22,11 +23,22 @@
 }
 
 .welcome-image {
-  background-image: url('/images/dock_dark.jpg'); 
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/gambier-630d6.appspot.com/o/dock_dark.jpg?alt=media&token=550989af-e5a5-4bf8-b09d-ecc2985e0f24'); 
   background-size: cover;
-  min-height: 8em;
   padding: 2em;
 }
+@media (max-width: 768px) {
+  .welcome-image {
+    min-height: 8em;
+  }
+}
+
+@media (min-width: 769px) {
+  .welcome-image {
+    min-height: 24em;
+  }
+}
+
 
 .title.home-title {
   color: white;
