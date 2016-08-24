@@ -5,6 +5,7 @@ import './bulma.css';
 import {authenticatedComponent, startFlow, signOut } from './firebaseUtils.js'
 import { bindToItem } from "firebase-3-react";
 import {Router, Route, browserHistory, IndexRoute, Link } from "react-router";
+import {Ferry, NB2Vancouver, Vancouver2NB} from "./Ferry";
 
 class Post extends React.Component {
   render () {
@@ -119,7 +120,7 @@ Categories.propTypes = {
   data: React.PropTypes.object,
 };
 
-const BoundCategories = bindToItem(Categories);
+// const BoundCategories = bindToItem(Categories);
 
 
 class News extends Component {
@@ -143,29 +144,6 @@ class News extends Component {
     )
   }
 }
-
-
-class Ferry extends Component {
-  render () {
-    return (
-      <section>
-        <div className="hero is-medium is-danger is-bold">
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">
-                Ferry Information
-              </h1>
-              <h2 className="subtitle">
-                best effort information
-              </h2>
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
-}
-
 
 class ForSale extends Component {
   render () {
@@ -333,8 +311,11 @@ class Navbar extends Component {
         <div className="hero-head">
           <nav className="nav has-shadow">
             <div className="nav-left">
-              <Link to="/" className="nav-item title is-4 is-brand">
-                Gambier Island Club
+              <Link to="/" className="nav-item title is-3 is-brand is-hidden-touch">
+                Gambier Island Trader
+              </Link>
+              <Link to="/" className="nav-item title is-5 is-brand is-hidden-desktop">
+                Gambier Island Trader
               </Link>
             </div>
 
@@ -383,21 +364,18 @@ class Home extends Component {
               <div className="column">
                 <Link to="/ferry">
                   <p className="notification is-danger is-heavy">
-                    Stormaway & Ferry Schedule
-                  </p>
-                </Link>
-              </div>
-              <div className="column">
-                <Link to="/free">
-                  <p className="notification is-info is-heavy">
-                  Free Stuff
+                  <div className="title">
+                    Ferry Schedules
+                  </div>
                   </p>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/forsale">
-                  <p className="notification is-primary is-heavy">
-                  For Sale
+                  <p className="notification is-info is-heavy">
+                  <div className="title">
+                  Postings
+                  </div>
                   </p>
                 </Link>
               </div>
@@ -406,21 +384,18 @@ class Home extends Component {
               <div className="column">
                 <Link to="/news">
                   <p className="notification is-success is-heavy">
+                  <div className="title">
                     News
-                  </p>
-                </Link>
-              </div>
-              <div className="column">
-                <Link to="/tobuy">
-                  <p className="notification is-warning is-heavy">
-                  Looking to buy
+                  </div>
                   </p>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/links">
-                  <p className="notification is-light is-heavy">
+                  <p className="notification is-warning is-heavy">
+                  <div className="title">
                   Useful Links
+                  </div>
                   </p>
                 </Link>
               </div>
@@ -557,6 +532,8 @@ class App extends Component {
         <Route path="/" component={Layout}>
           <IndexRoute component={Home} />
           <Route path="ferry" component={Ferry} />
+          <Route path="nb-van" component={NB2Vancouver} />
+          <Route path="van-nb" component={Vancouver2NB} />
           <Route path="news" component={News} />
           <Route path="free" component={Free} />
           <Route path="forsale" component={ForSale} />
