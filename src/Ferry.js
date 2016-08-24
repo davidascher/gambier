@@ -390,6 +390,21 @@ export class Ferry extends Component {
               and we will fix the schedule promptly, and accept our apologies.
             </div>
           </article>
+          <article className="message is-danger">
+            <div className="message-header">
+              Official BC Ferries Schedules
+            </div>
+            <div className="message-body">
+              <div className="control is-grouped">
+                <p className="control">
+                  <a className="button is-inverted" href="http://www.bcferries.com/schedules/mainland/lgik-current.php">Stormaway Schedule</a>
+                </p>
+                <p className="control">
+                  <a className="button is-outlined" href="http://www.bcferries.com/schedules/mainland/vasc-current.php">Big Ferry Schedule</a>
+                </p>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
     )
@@ -407,14 +422,14 @@ export class Ferry extends Component {
 
     return (
     <div>
-      <div className="hero is-medium is-danger is-bold">
+      <div className="hero is-medium is-primary is-bold">
         <div className="hero-head">
           <AuthNavbar />
         </div>
         <div className="hero-body">
           <div className="container">
             <h1 className="title">
-              Ferry Information
+              Gambier-Vancouver Ferry Schedule
             </h1>
             <h2 className="subtitle">
               Using <em>Ruby's Method</em>, for Gambier-Vancouver transits.

@@ -45,7 +45,7 @@ class Navbar extends Component {
     if (this.props.user) {
       let displayName = this.props.user.displayName;
       return (
-        <a id="sign-out" className="button is-light" href="#" onClick={this.signout.bind(this)}>
+        <a id="sign-out" className="button is-light is-outlined" href="#" onClick={this.signout.bind(this)}>
           <span id="sign-out-label"><span className="is-hidden-mobile">{displayName}: </span>Sign out</span>
           <span className="icon">
             <i className="fa fa-sign-out"></i>

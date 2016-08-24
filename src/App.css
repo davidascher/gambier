@@ -64,7 +64,7 @@ div .hero.is-primary a.nav-item, .hero.is-primary .nav-item a:not(.button) {
 }
 .subtitle.home-subtitle {
   color: white;
-  padding-bottom: 3em;
+  /*padding-bottom: 3em;*/
 }
 
 .longwait {

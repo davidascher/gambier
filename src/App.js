@@ -65,14 +65,11 @@ Post.propTypes = {
 class PostList extends React.Component {
    render () {
      const posts = this.props.data;
-     console.log("posts", posts)  
      if (! posts) {
       return (<div />)
      }  
-    //  const posts = this.props.items;
      let items = Object.keys(posts).map((id: string) => {
        const post = posts[id];
-       console.log("POST", post)
        return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} />
      });
 
@@ -224,8 +221,8 @@ class ToBuy extends Component {
 class Links extends Component {
   render () {
     return (
-      <section className="section">
-        <div className="hero is-medium is-light is-bold">
+      <div>
+        <div className="hero is-medium is-danger is-bold">
           <div className="hero-head">
             <AuthNavbar />
           </div>
@@ -240,7 +237,7 @@ class Links extends Component {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     )
   }
 }
@@ -260,14 +257,14 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <div className="hero welcome-image">
+        <div className="hero is-medium welcome-image">
           <div className="hero-head dark-background">
             <AuthNavbar />
           </div>
           <div className="hero-body">
             <div className="container">
               <h1 className="title home-title">
-                Free stuff, buy & sell, and the <em>best</em> ferry schedule
+                Free, for sale or for trade, &amp; the <em>best</em> ferry schedule
               </h1>
               <h2 className="subtitle  home-subtitle">
                 <i>Gambierites helping each other out</i>
@@ -276,44 +273,44 @@ class Home extends Component {
           </div>
         </div>
         <section className="section is-medium">
-          <div className="container is-fluid">
+          <div className="container">
             <div className="columns">
               <div className="column">
                 <Link to="/ferry">
-                  <p className="notification is-danger is-heavy">
+                  <div className="notification is-primary is-heavy">
                   <div className="title">
                     Ferry Schedules
                   </div>
-                  </p>
+                  </div>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/forsale">
-                  <p className="notification is-info is-heavy">
+                  <div className="notification is-info is-heavy">
                   <div className="title">
                   Postings
                   </div>
-                  </p>
+                  </div>
                 </Link>
               </div>
             </div>
             <div className="columns">
               <div className="column">
                 <Link to="/news">
-                  <p className="notification is-success is-heavy">
+                  <div className="notification is-success is-heavy">
                   <div className="title">
                     News
                   </div>
-                  </p>
+                  </div>
                 </Link>
               </div>
               <div className="column">
                 <Link to="/links">
-                  <p className="notification is-warning is-heavy">
+                  <div className="notification is-danger is-heavy">
                   <div className="title">
                   Useful Links
                   </div>
-                  </p>
+                  </div>
                 </Link>
               </div>
             </div>
@@ -394,7 +391,7 @@ class Add extends Component {
       <div>
         <AuthNavbar />
         <div className="section">
-        <div className="container is-fluid">
+          <div className="container">
             <section className="hero is-medium is-danger is-bold">
               <div className="hero-body">
                 <div className="container">
