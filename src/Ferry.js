@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router';
 import moment from 'moment';
+import {AuthNavbar} from './authbar'
 
 const Ndays = 10
 
@@ -381,6 +381,15 @@ export class Ferry extends Component {
               </ul>
             </div>
           </article>
+          <article className="message is-warning">
+            <div className="message-header">
+              Mistakes
+            </div>
+            <div className="message-body">
+              In the event of an error in this schedule, <em>please</em> email us (<a href="mailto:david.ascher@gmail.com">david.ascher@gmail.com</a>) and let us know,
+              and we will fix the schedule promptly, and accept our apologies.
+            </div>
+          </article>
         </div>
       </section>
     )
@@ -399,6 +408,9 @@ export class Ferry extends Component {
     return (
     <div>
       <div className="hero is-medium is-danger is-bold">
+        <div className="hero-head">
+          <AuthNavbar />
+        </div>
         <div className="hero-body">
           <div className="container">
             <h1 className="title">
@@ -409,14 +421,16 @@ export class Ferry extends Component {
             </h2>
           </div>
         </div>
+        <div className="hero-foot">
+          <div className="tabs is-medium is-centered is-boxed is-fullwidth">
+            <ul>
+              <li className={showingToGambierIsActive}><a onClick={this.showToGambier.bind(this)}>To Gambier</a></li>
+              <li className={showingToVancouverIsActive}><a onClick={this.showToVancouver.bind(this)}>To Vancouver</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
       <section className="section">
-        <div className="tabs is-medium is-centered is-toggle is-fullwidth">
-          <ul>
-            <li className={showingToGambierIsActive}><a onClick={this.showToGambier.bind(this)}>To Gambier</a></li>
-            <li className={showingToVancouverIsActive}><a onClick={this.showToVancouver.bind(this)}>To Vancouver</a></li>
-          </ul>
-        </div>
         {directiontable}
         {infoNote}
       </section>

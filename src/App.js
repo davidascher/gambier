@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import './App.css';
 import 'classnames';
 import './bulma.css';
-import {authenticatedComponent, startFlow, signOut } from './firebaseUtils.js'
 import { bindToItem } from "firebase-3-react";
 import {Router, Route, browserHistory, IndexRoute, Link } from "react-router";
 import {Ferry, NB2Vancouver, Vancouver2NB} from "./Ferry";
+import {AuthNavbar} from './authbar'
+import {authenticatedComponent } from './firebaseUtils.js'
 
 class Post extends React.Component {
   render () {
@@ -50,14 +51,6 @@ class Post extends React.Component {
             </div>
           </nav>
         </div>
-        <div className="media-right">
-          <a className="button is-light">
-            <span className="icon">
-              <i className="fa fa-trash"></i>
-            </span>
-            <span className="is-hidden-mobile" >Hide</span>
-          </a>
-        </div>
       </article>
     )
   }
@@ -84,8 +77,10 @@ class PostList extends React.Component {
      });
 
      return (
-        <div className="container is-fluid box">
-          {items}
+        <div className="section">
+          <div className="container box">
+            {items}
+          </div>
         </div>
      )
   }
@@ -122,12 +117,14 @@ Categories.propTypes = {
 
 // const BoundCategories = bindToItem(Categories);
 
-
 class News extends Component {
   render () {
     return (
-      <section>
+      <div>
         <div className="hero is-medium is-success is-bold">
+          <div className="hero-head">
+            <AuthNavbar />
+          </div>
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
@@ -140,7 +137,7 @@ class News extends Component {
           </div>
         </div>
         <BoundPostList label='News' firebaseRef='posts/news' />      
-      </section>
+      </div>
     )
   }
 }
@@ -148,8 +145,11 @@ class News extends Component {
 class ForSale extends Component {
   render () {
     return (
-      <section>
+      <div>
         <div className="hero is-medium is-primary is-bold">
+          <div className="hero-head">
+            <AuthNavbar />
+          </div>
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
@@ -162,7 +162,7 @@ class ForSale extends Component {
           </div>
         </div>
         <BoundPostList label='For Sale' firebaseRef='posts/forsale' />      
-      </section>
+      </div>
     )
   }
 }
@@ -171,8 +171,11 @@ class ForSale extends Component {
 class Free extends Component {
   render () {
     return (
-      <section>
+      <section className="section">
         <div className="hero is-medium is-info is-bold">
+          <div className="hero-head">
+            <AuthNavbar />
+          </div>
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
@@ -194,8 +197,11 @@ class Free extends Component {
 class ToBuy extends Component {
   render () {
     return (
-      <section>
+      <section className="section">
         <div className="hero is-medium is-warning is-bold">
+          <div className="hero-head">
+            <AuthNavbar />
+          </div>
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
@@ -218,8 +224,11 @@ class ToBuy extends Component {
 class Links extends Component {
   render () {
     return (
-      <section>
+      <section className="section">
         <div className="hero is-medium is-light is-bold">
+          <div className="hero-head">
+            <AuthNavbar />
+          </div>
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
@@ -237,107 +246,10 @@ class Links extends Component {
 }
 
 
-class Navbar extends Component {
-  constructor () {
-    super()
-    this.state = {'showWidget' : false, user: null}
-  }
-
-  signin () {
-    // console.log("signing in", this.state, "this.user", this.user)
-    this.setState({'showWidget': true})
-    // console.log(this.state)
-    window.requestAnimationFrame(function() {
-      startFlow('#widget')
-    });
-
-    // removeClass(document.getElementById("widget"), "hidden");
-  }
-
-  signout () {
-    signOut();
-    // this.onChange(false);
-  }
-
-  renderSignIn () { 
-    if (this.props.user || this.state.showWidget) {
-      return (<div />);
-    }
-    else {
-      return (
-        <a id="sign-in" className="button is-primary" href="#" onClick={this.signin.bind(this)}>
-          <span className="icon">
-            <i className="fa fa-sign-in"></i>
-          </span>
-          <span>Sign in</span>
-        </a>
-      )
-    }
-  }
-
-
-  renderSignOut () { 
-    if (this.props.user) {
-      let displayName = this.props.user.displayName;
-      return (
-        <a id="sign-out" className="button is-light" href="#" onClick={this.signout.bind(this)}>
-          <span id="sign-out-label"><span className="is-hidden-mobile">{displayName}: </span>Sign out</span>
-          <span className="icon">
-            <i className="fa fa-sign-out"></i>
-          </span>
-        </a>
-      )
-    }
-    else {
-      return (<div />);
-    }
-  }
-
-  renderWidget () {
-    // The start method will wait until the DOM is loaded.
-    if (this.state.showWidget) { 
-      return (<div id="widget" />)
-    } else {
-      return (<div />)
-    }
-  }
-
-  render () { 
-    let signin = this.renderSignIn()
-    let signout = this.renderSignOut()
-    let widget = this.renderWidget()
-    return (
-      <div className="hero is-light">
-        <div className="hero-head">
-          <nav className="nav has-shadow">
-            <div className="nav-left">
-              <Link to="/" className="nav-item title is-3 is-brand is-hidden-touch">
-                Gambier Island Trader
-              </Link>
-              <Link to="/" className="nav-item title is-5 is-brand is-hidden-desktop">
-                Gambier Island Trader
-              </Link>
-            </div>
-
-            <div className="nav-right">
-              <span className="nav-item">
-                {signin}{signout}{widget}
-              </span>
-            </div>
-          </nav>
-        </div>
-      </div>
-    )
-  }
-}
-
-let AuthNavbar = authenticatedComponent(Navbar);
-
 class Layout extends Component {
   render () {
     return (
       <div>
-        <AuthNavbar />
         {this.props.children}
       </div>
     )
@@ -348,16 +260,21 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <section className="welcome-image">
+        <div className="hero welcome-image">
+          <div className="hero-head dark-background">
+            <AuthNavbar />
+          </div>
+          <div className="hero-body">
             <div className="container">
               <h1 className="title home-title">
                 Free stuff, buy & sell, and the <em>best</em> ferry schedule
               </h1>
-              <h2 className="subtitle home-subtitle">
+              <h2 className="subtitle  home-subtitle">
                 <i>Gambierites helping each other out</i>
               </h2>
             </div>
-        </section>
+          </div>
+        </div>
         <section className="section is-medium">
           <div className="container is-fluid">
             <div className="columns">
