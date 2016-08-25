@@ -1,4 +1,4 @@
-@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:300,700';
+@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:300,600,700';
 
 * {
   font-family: "Open Sans";
@@ -84,3 +84,57 @@ div .hero.is-primary a.nav-item, .hero.is-primary .nav-item a:not(.button) {
 .table td.no-top-border {
   /*border-bottom: none;*/
 }
+
+.incoming::before {
+⇢der-bottom: none;
+}
+.table td.no-top-border {
+  /*border-bottom: none;*/
+}
+
+.incoming::before {
+  content: "⇢ ";
+  margin-left: -2.5ex;
+}
+
+@media (max-width: 769px) {
+  section.section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  section h1 {
+    padding-left: 1ex;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 400px) {
+  .outgoing::after {
+    content: " ⇢";
+    margin-right: 2.5ex;
+    /*margin-left: 4.5ex;*/
+  }
+}
+table.table.align-right td {
+  text-align: center;
+}
+table.table.align-right th {
+  text-align: center;
+}
+
+table.table.schedule tr.good td {
+  font-weight: 600;
+}
+table.table.schedule tr.good td div {
+  font-weight: 600;
+}
+
+.shift-right-1 {
+  position: relative;
+  left: 1ex;
+}
+.shift-right-2 {
+  position: relative;
+  left: 3ex;
+}
+
