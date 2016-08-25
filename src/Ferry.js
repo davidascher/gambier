@@ -249,14 +249,20 @@ class Table extends Component {
       return
     }
 
-    let start;
+    let start, end;
     if (direction === 'van2nb') {
-      start = "Leave Horseshoe Bay"
+      start = "Horseshoe Bay"
+      end = "New Brighton"
     } else {
-      start = "Leave New Brighton"
+      start = "New Brighton"
+      end = "Horseshoe Bay"
     }
+    let rows = []
+    let i = 0
+    for (let index = 0; index < times.length; index++) {
+      let triple = times[index]
 
-    let rows = times.map(function(triple, index) {
+    // let rows = times.map(function(triple, index) {
       let start_bits = triple[1].split(' ')[0].split(':')
       let end_bits = triple[2].split(' ')[0].split(':')
       let startDate = new Date(0, 0, 0, start_bits[0], start_bits[1], 0);
@@ -265,49 +271,77 @@ class Table extends Component {
       let hours = Math.floor(diff / 1000 / 60 / 60);
       diff -= hours * 1000 * 60 * 60;
       let minutes = Math.floor(diff / 1000 / 60);
-      let delay;
+      let connection;
       if (minutes > 35) {
-        delay = (
-          <td className="is-icon">
-            <i className="fa fa-clock-o"></i>
-          </td>
-        )
+        connection = "bad"
       } else {
-        delay = (
-          <td className="is-icon">
-          </td>
+        connection = "good"
+      }
+      i++
+      if (direction === 'van2nb') {
+        let departHB = moment(triple[0], "h:mm A")
+        let arriveLangdale = departHB.add(40, 'minutes')
+        let arriveLangdaleFmt = arriveLangdale.format("h:mm A")
+        let departLangdale = moment(triple[1], "h:mm A")
+        let delay = departLangdale.diff(arriveLangdale, 'minutes')
+        if (delay > 30) {
+        connection = "bad"
+        } else {
+          connection = "good"
+        }
+        rows.push(<tr className={connection} key={i}>
+            <td className="outgoing">{triple[0]}</td>
+            <td className="shift-right-1">
+              <div className="incoming">{arriveLangdaleFmt}</div>
+              <div className="outgoing">{triple[1]}</div>
+            </td>
+            <td className="shift-right-2">
+              <div>&nbsp;</div>
+              <div className="incoming">{triple[2]}</div>
+            </td>
+          </tr>)
+      } else {
+        let arriveLangdale = moment(triple[1], "h:mm A")
+        let departLangdale = moment(triple[2], "h:mm A")
+        let delay = departLangdale.diff(arriveLangdale, 'minutes')
+        if (delay > 30) {
+        connection = "bad"
+        } else {
+          connection = "good"
+        }
+
+        let departLang = moment(triple[2], "h:mm A")
+        let hb_arrive = moment(departLang).add(40, 'minutes').format("h:mm A")
+        rows.push (<tr className={connection} key={i}>
+          <td className="outgoing">{triple[0]}</td>
+          <td className="shift-right-1"><div className="incoming">{triple[1]}</div>
+          <div className="outgoing">{triple[2]}</div></td>
+          <td className="shift-right-2"><div>&nbsp;</div><div className="incoming">{hb_arrive}</div></td>
+          </tr>
         )
       }
-
-      return (<tr key={index}>
-        <td>{triple[0]}</td>
-        <td>{triple[1]}</td>
-        {delay}
-        <td>{triple[2]}</td>
-        </tr>)
-    })
+    }
+    let rowsBit = rows
     return (
       <div>
           <h1 className="title">{day} {date}</h1>
-          <table className="table">
+          <table className="table schedule">
             <thead>
               <tr>
                 <th>{start}</th>
-                <th>Arrive Langdale</th>
-                <th></th>
-                <th>Leave Langdale</th>
+                <th>Langdale</th>
+                <th className="hang-left">{end}</th>
               </tr>
             </thead>
             <tfoot>
               <tr>
                 <th>{start}</th>
-                <th>Arrive Langdale</th>
-                <th></th>
-                <th>Leave Langdale</th>
+                <th>Langdale</th>
+                <th>{end}</th>
               </tr>
             </tfoot>
             <tbody>
-              {rows}
+              {rowsBit}
             </tbody>
           </table>
         </div>
@@ -336,22 +370,6 @@ export class Direction extends Component {
   }  
 }
 
-export class NB2Vancouver extends Component {
-  render () {
-    return (
-      <Direction direction="nb2van" />
-    )
-  }
-}
-
-export class Vancouver2NB extends Component {
-  render () {
-    return (
-      <Direction direction="van2nb" />
-    )
-  }
-}
-
 export class Ferry extends Component {
   constructor () {
     super()
@@ -374,8 +392,7 @@ export class Ferry extends Component {
             </div>
             <div className="message-body">
               <ul>
-                <li>The clock <span className="icon is-small"><i className="fa fa-clock-o"></i>
-                  </span> indicates a layover longer than 35 minutes.</li>
+                <li>The <strong>bold rows</strong> indicates a layover shorter than 35 minutes.</li>
                 <li>The ferry trip between Horseshoe Bay and Langdale takes 40 minutes, and is free going back to Horseshoe Bay.</li>
                 <li>The <em>Stormaway</em> trip between Langdale and New Brighton takes 10 minutes or more, paid both ways.</li>
               </ul>
@@ -395,14 +412,12 @@ export class Ferry extends Component {
               Official BC Ferries Schedules
             </div>
             <div className="message-body">
-              <div className="control is-grouped">
                 <p className="control">
                   <a className="button is-inverted" href="http://www.bcferries.com/schedules/mainland/lgik-current.php">Stormaway Schedule</a>
                 </p>
                 <p className="control">
                   <a className="button is-outlined" href="http://www.bcferries.com/schedules/mainland/vasc-current.php">Big Ferry Schedule</a>
                 </p>
-              </div>
             </div>
           </article>
         </div>
@@ -411,11 +426,11 @@ export class Ferry extends Component {
 
     let directiontable, showingToGambierIsActive, showingToVancouverIsActive;
     if (this.state.direction === 'nb2van') {
-      directiontable = (<NB2Vancouver />)
+      directiontable = (<Direction direction="nb2van" />)
       showingToGambierIsActive = "" 
       showingToVancouverIsActive = "is-active" 
     } else {
-      directiontable = (<Vancouver2NB />)
+      directiontable = (<Direction direction="van2nb" />)
       showingToGambierIsActive = "is-active" 
       showingToVancouverIsActive = "" 
     }
