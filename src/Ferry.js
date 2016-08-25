@@ -249,14 +249,20 @@ class Table extends Component {
       return
     }
 
-    let start;
+    let start, end;
     if (direction === 'van2nb') {
-      start = "Leave Horseshoe Bay"
+      start = "Horseshoe Bay"
+      end = "New Brighton"
     } else {
-      start = "Leave New Brighton"
+      start = "New Brighton"
+      start = "Horseshoe Bay"
     }
+    let rows = []
+    let i = 0
+    for (let index = 0; index < times.length; index++) {
+      let triple = times[index]
 
-    let rows = times.map(function(triple, index) {
+    // let rows = times.map(function(triple, index) {
       let start_bits = triple[1].split(' ')[0].split(':')
       let end_bits = triple[2].split(' ')[0].split(':')
       let startDate = new Date(0, 0, 0, start_bits[0], start_bits[1], 0);
@@ -278,14 +284,46 @@ class Table extends Component {
           </td>
         )
       }
-
-      return (<tr key={index}>
-        <td>{triple[0]}</td>
-        <td>{triple[1]}</td>
-        {delay}
-        <td>{triple[2]}</td>
-        </tr>)
-    })
+      i++
+      if (direction === 'van2nb') {
+        let departHB = moment(triple[0], "h:mm A")
+        let langdale_arrive = moment(departHB).add(40, 'minutes').format("h:mm A")
+        rows.push(<tr key={i}>
+            <td className="no-bottom-border">{triple[0]}</td>
+            <td className="no-bottom-border wave" />
+            <td className="no-bottom-border">{langdale_arrive}</td>
+            <td className="no-bottom-border" />
+            <td className="no-bottom-border" />
+          </tr>)
+        i++
+        rows.push(<tr key={i}>
+            <td className="no-top-border" />
+            <td className="no-top-border" />
+            <td className="no-top-border">{triple[1]}</td>
+            <td className="no-top-border wave" />
+            <td className="no-top-border">{triple[2]}</td>
+          </tr>)
+      } else {
+        let departLang = moment(triple[2], "h:mm A")
+        let hb_arrive = moment(departLang).add(40, 'minutes').format("h:mm A")
+        rows.push (<tr key={i}>
+          <td className="no-bottom-border">{triple[0]}</td>
+          <td className="no-bottom-border" />
+          <td className="no-bottom-border">{triple[1]}</td>
+          <td className="no-bottom-border" />
+          <td className="no-bottom-border" />
+          </tr>
+        )
+        rows.push(<tr key={i}>
+          <td>{triple[2]}</td>
+          <td></td>
+          <td></td>
+          <td>{hb_arrive}</td>
+          </tr>
+          )
+      }
+    }
+    let rowsBit = rows
     return (
       <div>
           <h1 className="title">{day} {date}</h1>
@@ -293,21 +331,23 @@ class Table extends Component {
             <thead>
               <tr>
                 <th>{start}</th>
-                <th>Arrive Langdale</th>
-                <th></th>
-                <th>Leave Langdale</th>
+                <th />
+                <th>Langdale</th>
+                <th />
+                <th>{end}</th>
               </tr>
             </thead>
             <tfoot>
               <tr>
                 <th>{start}</th>
-                <th>Arrive Langdale</th>
-                <th></th>
-                <th>Leave Langdale</th>
+                <th />
+                <th>Langdale</th>
+                <th />
+                <th>{end}</th>
               </tr>
             </tfoot>
             <tbody>
-              {rows}
+              {rowsBit}
             </tbody>
           </table>
         </div>
@@ -334,22 +374,6 @@ export class Direction extends Component {
       </div>
     )
   }  
-}
-
-export class NB2Vancouver extends Component {
-  render () {
-    return (
-      <Direction direction="nb2van" />
-    )
-  }
-}
-
-export class Vancouver2NB extends Component {
-  render () {
-    return (
-      <Direction direction="van2nb" />
-    )
-  }
 }
 
 export class Ferry extends Component {
@@ -411,11 +435,11 @@ export class Ferry extends Component {
 
     let directiontable, showingToGambierIsActive, showingToVancouverIsActive;
     if (this.state.direction === 'nb2van') {
-      directiontable = (<NB2Vancouver />)
+      directiontable = (<Direction direction="nb2van" />)
       showingToGambierIsActive = "" 
       showingToVancouverIsActive = "is-active" 
     } else {
-      directiontable = (<Vancouver2NB />)
+      directiontable = (<Direction direction="van2nb" />)
       showingToGambierIsActive = "is-active" 
       showingToVancouverIsActive = "" 
     }

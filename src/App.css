@@ -77,3 +77,10 @@ div .hero.is-primary a.nav-item, .hero.is-primary .nav-item a:not(.button) {
 .hero-foot a {
   font-weight: 700;
 }
+
+.table td.no-bottom-border {
+  border-bottom: none;
+}
+.table td.no-top-border {
+  /*border-bottom: none;*/
+}
