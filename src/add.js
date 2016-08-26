@@ -3,6 +3,7 @@ import {AuthNavbar} from './authbar'
 import {authenticatedComponent } from './firebaseUtils.js'
 import firebase from 'firebase'
 import smartcrop from 'smartcrop'
+import moment from 'moment'
 
 // XXX Add an optional location on the island
 // XXX Add an optional emoji/fa-icon
@@ -21,17 +22,15 @@ class UnauthedAdd extends Component {
       'subject': '',
       'body': '',
       imageURLs: []
+      // user: this.state.user
     }
   }
 
   onImageChange (e) {
-    console.log("in onImageChange", e);
     let file = e.target.files[0];
-    console.log("file", file)
 
     if (file) {
       if (/^image\//i.test(file.type)) {
-        console.log('found an image')
         this.readFile(file);
       } else {
         alert('Not a valid image!');
@@ -41,11 +40,9 @@ class UnauthedAdd extends Component {
 
   readFile (file) {
     var reader = new FileReader();
-    console.log('reading the file');
     let comp = this
 
     reader.onloadend = function () {
-      console.log('got on load end')
       comp.processFile(reader.result, file.type, file.name);
     }
 
@@ -57,8 +54,8 @@ class UnauthedAdd extends Component {
   }
 
   processFile (dataURL, fileType, fileName) {
-    var maxWidth = 640;
-    var maxHeight = 360;
+    var maxWidth = 960;
+    var maxHeight = 720;
     let comp = this;
     let canvas;
 
@@ -74,7 +71,6 @@ class UnauthedAdd extends Component {
         canvas.height = crop.height;
         var context = canvas.getContext("2d");
         let ratio = (1.0*maxWidth) / crop.width
-        console.log('ratio', ratio)
         context.scale(ratio, ratio)
         context.drawImage(image, 0,0, crop.width, crop.height);
         let smallImage = canvas.getContext("2d").getImageData(0, 0, maxWidth, maxHeight)
@@ -102,7 +98,7 @@ class UnauthedAdd extends Component {
     };
 
     // Upload file and metadata to the object 'images/mountains.jpg'
-    var uploadTask = storageRef.child('images/' + fileName).put(file, metadata);
+    var uploadTask = storageRef.child('uploadsByUser/' + this.props.user.uid + '/' + moment().format()).put(file, metadata);
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -113,11 +109,11 @@ class UnauthedAdd extends Component {
         switch (snapshot.state) {
           case firebase.storage.TaskState.PAUSED: // or 'paused'
             comp.setState({loading: true})
-            console.log('Upload is paused');
+            // console.log('Upload is paused');
             break;
           case firebase.storage.TaskState.RUNNING: // or 'running'
             comp.setState({loading: true})
-            console.log('Upload is running');
+            // console.log('Upload is running');
             break;
           default:
             console.log("unhandled case");
@@ -144,7 +140,6 @@ class UnauthedAdd extends Component {
       let imageURLs = comp.state['imageURLs']
       imageURLs.push(downloadURL)
       comp.setState({loading: false, imageURLs: imageURLs})
-      // console.log("got downloadURL", downloadURL)
     });
 
   }
@@ -154,21 +149,25 @@ class UnauthedAdd extends Component {
   }
 
   submit () {
-    console.log(this.state.section)
+    console.log('doing submit')
     // eslint-disable-next-line
     var database = firebase.database();
     let postData = {
       poster: this.props.user.displayName,
+      tag: this.state.section,
       body: this.state.body,
       uid: this.props.user.uid,
+      imageURLs: this.state.imageURLs,
       subject: this.state.subject
     }
+    console.log('postData', postData)
     try {
-      let key = database.ref().child('posts').child(this.state.section).push().key;
-      // console.log("KEY", key)
+      console.log("WRiting a post")
+      let key = database.ref().child('posts').child('general').push().key;
+      console.log('key', key)
       // Write the new post's data simultaneously in the posts list and the user's post list.
       var updates = {};
-      updates[`/posts/${this.state.section}/${key}`] = postData;
+      updates[`/posts/general/${key}`] = postData;
       // eslint-disable-next-line
       return firebase.database().ref().update(updates);
     } catch (e) {
@@ -195,7 +194,7 @@ class UnauthedAdd extends Component {
       progress = (<span />)
     } 
     let figures = this.state.imageURLs.map(function (url, index) {
-      return (<figure key={index} className="image is-16x9">
+      return (<figure key={index} className="image is-4x3">
         <img src={url} alt="upload" />
       </figure>
       )

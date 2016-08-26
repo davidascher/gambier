@@ -10,13 +10,19 @@ import {Add} from './add'
 
 class Post extends React.Component {
   render () {
+    let images = (<span />);
+    if (this.props.images) {
+      images = this.props.images.map(function(imageURL, index) {
+        return (
+          <figure key={index} className="image is-4x3">
+            <img src={imageURL} alt="placeholder" />
+          </figure>
+        )
+      })
+      console.log(images)
+    }
     return (
       <article className="media">
-        <div className="media-left">
-          <figure className="image is-64x64">
-            <img src="//placehold.it/128x128" alt="placeholder" />
-          </figure>
-        </div>
         <div className="media-content">
           <div className="content">
             <p>
@@ -26,6 +32,7 @@ class Post extends React.Component {
           <div className="content">
             {this.props.body}
             <br /> 
+            {images}
             <small>11:09 PM - 1 Jan 2016</small>
           </div>
           <nav className="level">
@@ -70,7 +77,7 @@ class PostList extends React.Component {
      }  
      let items = Object.keys(posts).map((id: string) => {
        const post = posts[id];
-       return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} />
+       return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} images={post.imageURLs}/>
      });
 
      return (
@@ -139,7 +146,7 @@ class News extends Component {
   }
 }
 
-class ForSale extends Component {
+class Posts extends Component {
   render () {
     return (
       <div>
@@ -150,21 +157,21 @@ class ForSale extends Component {
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
-                Stuff for sale
+                General Posts
               </h1>
               <h2 className="subtitle">
-                only the best
+                keep the reader in mind, make their day.
               </h2>
             </div>
           </div>
         </div>
-        <BoundPostList label='For Sale' firebaseRef='posts/forsale' />
+        <BoundPostList label='General Posts' firebaseRef='posts/general' />
         <div className="level">
           <Link className="level-item has-text-centered button is-large is-primary" to="/add">
             <span className="icon">
               <i className="fa fa-plus"></i>
             </span>
-            <span>Post new entry</span>
+            <span>add new entry</span>
           </Link>
         </div>
       </div>
@@ -251,7 +258,7 @@ class Home extends Component {
                 </Link>
               </div>
               <div className="column">
-                <Link to="/forsale">
+                <Link to="/posts">
                   <div className="notification is-info is-heavy">
                   <div className="title">
                   Postings
@@ -309,7 +316,7 @@ class App extends Component {
           <Route path="nb-van" component={NB2Vancouver} />
           <Route path="van-nb" component={Vancouver2NB} />
           <Route path="news" component={News} />
-          <Route path="forsale" component={ForSale} />
+          <Route path="posts" component={Posts} />
           <Route path="links" component={Links} />
           <Route path="add" component={Add} />
         </Route>
