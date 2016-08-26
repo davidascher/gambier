@@ -6,7 +6,7 @@ import { bindToItem } from "firebase-3-react";
 import {Router, Route, browserHistory, IndexRoute, Link } from "react-router";
 import {Ferry, NB2Vancouver, Vancouver2NB} from "./Ferry";
 import {AuthNavbar} from './authbar'
-import {authenticatedComponent } from './firebaseUtils.js'
+import {Add} from './add'
 
 class Post extends React.Component {
   render () {
@@ -158,64 +158,19 @@ class ForSale extends Component {
             </div>
           </div>
         </div>
-        <BoundPostList label='For Sale' firebaseRef='posts/forsale' />      
+        <BoundPostList label='For Sale' firebaseRef='posts/forsale' />
+        <div className="level">
+          <Link className="level-item has-text-centered button is-large is-primary" to="/add">
+            <span className="icon">
+              <i className="fa fa-plus"></i>
+            </span>
+            <span>Post new entry</span>
+          </Link>
+        </div>
       </div>
     )
   }
 }
-
-
-class Free extends Component {
-  render () {
-    return (
-      <section className="section">
-        <div className="hero is-medium is-info is-bold">
-          <div className="hero-head">
-            <AuthNavbar />
-          </div>
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">
-                Free stuff!
-              </h1>
-              <h2 className="subtitle">
-                reduce, reuse, <em>recycle!</em>
-              </h2>
-            </div>
-          </div>
-        </div>
-        <BoundPostList label='Free Stuff' firebaseRef='posts/freestuff' />      
-      </section>
-    )
-  }
-}
-
-
-class ToBuy extends Component {
-  render () {
-    return (
-      <section className="section">
-        <div className="hero is-medium is-warning is-bold">
-          <div className="hero-head">
-            <AuthNavbar />
-          </div>
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">
-                Goods and Services people are looking to buy
-              </h1>
-              <h2 className="subtitle">
-                barter is ok!
-              </h2>
-            </div>
-          </div>
-        </div>
-        <BoundPostList label='To Buy' firebaseRef='posts/forbuy' />      
-      </section>
-    )
-  }
-}
-
 
 
 class Links extends Component {
@@ -237,6 +192,17 @@ class Links extends Component {
             </div>
           </div>
         </div>
+        <section className="section">
+          <h1 className="title">
+            Ferry Websites
+          </h1>
+          <h1 className="title">
+            Tides Tables
+          </h1>
+          <h1 className="title">
+            Community Websites
+          </h1>
+        </section>
       </div>
     )
   }
@@ -321,9 +287,6 @@ class Home extends Component {
   }
 }
 
-
-
-
             // <BoundCategories firebaseRef="sectionsMeta" />
             // <div className="control is-grouped">
             // <p className="control">
@@ -336,109 +299,6 @@ class Home extends Component {
             //   </p>
             // </div>
 
-// XXX Add an optional picture
-// XXX Add an optional location on the island
-// XXX Add an optional emoji/fa-icon
-
-class Add extends Component {
-  constructor () {
-    super()
-    this.state = {
-      'section': '',
-      'subject': '',
-      'body': ''
-    }
-  }
-  cancel () {
-    window.history.back();
-  }
-
-  submit () {
-    console.log(this.state.section)
-    // eslint-disable-next-line
-    var database = firebase.database();
-    let postData = {
-      poster: this.props.user.displayName,
-      body: this.state.body,
-      uid: this.props.user.uid,
-      subject: this.state.subject
-    }
-    try {
-      let key = database.ref().child('posts').child(this.state.section).push().key;
-      console.log("KEY", key)
-      // Write the new post's data simultaneously in the posts list and the user's post list.
-      var updates = {};
-      updates[`/posts/${this.state.section}/${key}`] = postData;
-      // eslint-disable-next-line
-      return firebase.database().ref().update(updates);
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  handleSectionChange (event) {
-    this.setState({section: event.target.value});
-  }
-  handleSubjectChange (event) {
-    this.setState({subject: event.target.value});
-  }
-  handleBodyChange (event) {
-    this.setState({body: event.target.value});
-  }
-
-  render() {
-    return (
-      <div>
-        <AuthNavbar />
-        <div className="section">
-          <div className="container">
-            <section className="hero is-medium is-danger is-bold">
-              <div className="hero-body">
-                <div className="container">
-                  <h1 className="title">
-                    Add your two bits
-                  </h1>
-                  <h2 className="subtitle">
-                    Be kind, rewind
-                  </h2>
-                </div>
-              </div>
-            </section>
-          <section className="section">
-            <label className="label">Section</label>
-            <p className="control">
-              <span className="select">
-                <select value={this.state.section}
-                  onChange={this.handleSectionChange.bind(this)}>
-                  <option value="">Select Dropdown</option>
-                  <option value="news">Announcements</option>
-                  <option value="freestuff">Free Stuff</option>
-                  <option value="forsale">For Sale</option>
-                  <option value="forbuy">Looking for…</option>
-                </select>
-              </span>
-            </p>
-            <label className="label">Post Title</label>
-            <p className="control">
-              <input className="input" type="text" placeholder="Make it relevant" onChange={this.handleSubjectChange.bind(this)} />
-            </p>
-            <label className="label">Post Content</label>
-            <p className="control">
-              <textarea className="textarea" placeholder="Make it interesting" onChange={this.handleBodyChange.bind(this)} />
-            </p>
-            <p className="control">
-              <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
-              <button className="button is-link" onClick={this.cancel.bind(this)}>Cancel</button>
-            </p>
-          </section>
-        </div>
-      </div>
-      </div>
-    );
-  }
-}
-let AuthenticatedAdd = authenticatedComponent(Add)
-
 class App extends Component {
   render() {
     return (
@@ -449,11 +309,9 @@ class App extends Component {
           <Route path="nb-van" component={NB2Vancouver} />
           <Route path="van-nb" component={Vancouver2NB} />
           <Route path="news" component={News} />
-          <Route path="free" component={Free} />
           <Route path="forsale" component={ForSale} />
-          <Route path="tobuy" component={ToBuy} />
           <Route path="links" component={Links} />
-          <Route path="add" component={AuthenticatedAdd} />
+          <Route path="add" component={Add} />
         </Route>
       </Router>
     );
