@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.2.1"
+    "react-scripts": "0.2.3",
+    "shelljs": "^0.7.4",
+    "shx": "^0.1.4",
+    "sw-precache": "^4.0.0"
   },
   "dependencies": {
     "add-class": "^1.0.3",
@@ -18,11 +21,12 @@
     "react-dom": "^15.2.1",
     "react-router": "^2.6.1",
     "remove-class": "^1.0.0",
-    "smartcrop": "^1.1.0"
+    "smartcrop": "^1.1.0",
+    "sw-toolbox": "^3.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && shx cp -r static/* build/static/ && sw-precache --root='build/' --static-file-globs='build/**/!(*map*)'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

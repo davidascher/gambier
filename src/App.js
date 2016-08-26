@@ -8,6 +8,8 @@ import {Ferry, NB2Vancouver, Vancouver2NB} from "./Ferry";
 import {AuthNavbar} from './authbar'
 import {Add} from './add'
 
+navigator.serviceWorker.register('service-worker.js');
+
 class Post extends React.Component {
   render () {
     let images = (<span />);

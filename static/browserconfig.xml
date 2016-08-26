@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square70x70logo src="https://firebasestorage.googleapis.com/v0/b/gambier-630d6.appspot.com/o/icons%2Fms-icon-70x70.png?alt=media"/>
+            <square150x150logo src="https://firebasestorage.googleapis.com/v0/b/gambier-630d6.appspot.com/o/icons%2Fms-icon-150x150.png?alt=media"/>
+            <square310x310logo src="https://firebasestorage.googleapis.com/v0/b/gambier-630d6.appspot.com/o/icons%2Fms-icon-310x310.png?alt=media"/>
+            <TileColor>#2b5797</TileColor>
+        </tile>
+    </msapplication>
+</browserconfig>
