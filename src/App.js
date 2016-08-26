@@ -239,10 +239,10 @@ class Home extends Component {
           <div className="hero-body">
             <div className="container">
               <h1 className="title home-title">
-                Free, for sale or for trade, &amp; the <em>best</em> ferry schedule
+                Free, for sale or for trade, &amp; the <b style={{fontWeight: 700}}>best</b> ferry schedule
               </h1>
               <h2 className="subtitle  home-subtitle">
-                <i>Gambierites helping each other out</i>
+                Gambierites helping each other out
               </h2>
             </div>
           </div>

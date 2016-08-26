@@ -1,18 +1,37 @@
-@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:300,600,700';
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700';
+@import "font-awesome.css";
+
+
+html {
+  font-size: 16px;
+}
+
+.content {
+  font-weight: 600;
+}
 
 * {
   font-family: "Open Sans";
-  font-weight: 300;
 }
 
 .is-heavy {
   font-weight: 700;
 }
+figure.image {
+  padding-top: 1ex;
+  padding-bottom: 1ex;
+}
 
 a.is-brand {
-  font-family: 'Open Sans Condensed';
   font-weight: 700;
   margin-bottom: 5px !important;
+}
+
+a.is-brand.is-3 {
+  font-size: 19px;
+}
+a.is-brand.is-5 {
+  font-size: 16px;
 }
 
 div .hero.is-primary a.nav-item, .hero.is-primary .nav-item a:not(.button) {
