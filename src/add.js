@@ -158,6 +158,7 @@ class UnauthedAdd extends Component {
       body: this.state.body,
       uid: this.props.user.uid,
       imageURLs: this.state.imageURLs,
+      timestamp: moment().valueOf(),
       subject: this.state.subject
     }
     console.log('postData', postData)

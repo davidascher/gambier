@@ -7,8 +7,11 @@ import {Router, Route, browserHistory, IndexRoute, Link } from "react-router";
 import {Ferry, NB2Vancouver, Vancouver2NB} from "./Ferry";
 import {AuthNavbar} from './authbar'
 import {Add} from './add'
+import moment from 'moment';
 
-navigator.serviceWorker.register('service-worker.js');
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('service-worker.js');
+}
 
 class Post extends React.Component {
   render () {
@@ -23,19 +26,23 @@ class Post extends React.Component {
       })
       console.log(images)
     }
+    let time = this.props.timestamp ? moment(this.props.timestamp).fromNow() : ''
     return (
       <article className="media">
         <div className="media-content">
           <div className="content">
             <p>
-              <strong>{this.props.subject}</strong> <i>(by {this.props.poster})</i>
+              <strong>{this.props.subject}</strong>
             </p> 
           </div>
           <div className="content">
             {this.props.body}
             <br /> 
             {images}
-            <small>11:09 PM - 1 Jan 2016</small>
+            <div className="level is-mobile">
+              <span className="level-item">{this.props.poster}</span>
+              <span className="level-right right-align level-item">{time}</span>
+            </div>
           </div>
           <nav className="level">
             <div className="level-left">
@@ -79,9 +86,10 @@ class PostList extends React.Component {
      }  
      let items = Object.keys(posts).map((id: string) => {
        const post = posts[id];
-       return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} images={post.imageURLs}/>
+       return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} images={post.imageURLs} timestamp={post.timestamp}/>
      });
 
+     items = items.reverse()
      return (
         <div className="section">
           <div className="container box">
@@ -112,7 +120,6 @@ const Categories = class extends React.Component {
       const categoryRef = 'posts/'+id
 
       return <BoundPostList key={id} label={category.label} firebaseRef={categoryRef} />
-      // return <Category key={id} label={category.label} items={category.items}></Category>;
     });
   }
 };
@@ -168,14 +175,12 @@ class Posts extends Component {
           </div>
         </div>
         <BoundPostList label='General Posts' firebaseRef='posts/general' />
-        <div className="level">
-          <Link className="level-item has-text-centered button is-large is-primary" to="/add">
-            <span className="icon">
-              <i className="fa fa-plus"></i>
-            </span>
-            <span>add new entry</span>
-          </Link>
-        </div>
+        <Link className="button is-large is-primary" style={{width: "100%"}} to="/add">
+          <span className="icon">
+            <i className="fa fa-plus"></i>
+          </span>
+          <span>add new entry</span>
+        </Link>
       </div>
     )
   }

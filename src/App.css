@@ -1,4 +1,5 @@
-@import 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700';
+@import 'https://fonts.googleapis.com/css?family=Lato:400,700';
+/*@import 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700';*/
 @import "font-awesome.css";
 
 
@@ -11,7 +12,7 @@ html {
 }
 
 * {
-  font-family: "Open Sans";
+  font-family: "Lato";
 }
 
 .is-heavy {
@@ -22,6 +23,9 @@ figure.image {
   padding-bottom: 1ex;
 }
 
+.right-align {
+  text-align: right;
+}
 a.is-brand {
   font-weight: 700;
   margin-bottom: 5px !important;
