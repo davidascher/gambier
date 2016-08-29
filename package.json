@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "@kadira/storybook": "^2.5.1",
     "react-scripts": "0.2.3",
     "shelljs": "^0.7.4",
     "shx": "^0.1.4",
@@ -27,6 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && shx cp -r static/* build/static/ && sw-precache --root='build/' --static-file-globs='build/**/!(*map*)'",
+    "storybook": "start-storybook -p 9001",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

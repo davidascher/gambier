@@ -27,7 +27,7 @@ export var authenticatedComponent = ComposedComponent => class extends Component
   gotAuthStateChanged (user) {
     let comp = this;
     if (user) {
-      console.log("in gotAuthStateChaned", user, comp)
+      // console.log("in gotAuthStateChaned", user, comp)
 
         var displayName = user.displayName;
         var email = user.email;
@@ -36,7 +36,6 @@ export var authenticatedComponent = ComposedComponent => class extends Component
         var uid = user.uid;
         var providerData = user.providerData;
       user.getToken().then(function(accessToken) {
-        console.log("WE HAVE A TOKEN, this", comp);
         comp.setState({user: {
           displayName: displayName,
           accessToken: accessToken,

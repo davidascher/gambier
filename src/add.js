@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {AuthNavbar} from './authbar'
 import {authenticatedComponent } from './firebaseUtils.js'
 import firebase from 'firebase'
 import smartcrop from 'smartcrop'
@@ -18,9 +17,11 @@ class UnauthedAdd extends Component {
   constructor () {
     super()
     this.state = {
-      'section': '',
       'subject': '',
       'body': '',
+      'tag': '',
+      'email': '',
+      'phone': '',
       imageURLs: []
       // user: this.state.user
     }
@@ -149,23 +150,27 @@ class UnauthedAdd extends Component {
   }
 
   submit () {
-    console.log('doing submit')
     // eslint-disable-next-line
     var database = firebase.database();
+    let displayName = 'Unlogged in user'
+    let uid = '0'
+    if (this.props.user) {
+      displayName = this.props.user.displayName
+      uid = this.props.user.uid
+    }
     let postData = {
-      poster: this.props.user.displayName,
-      tag: this.state.section,
+      poster: displayName,
+      uid: uid,
+      email: this.state.email,
+      phone: this.state.phone,
+      tag: this.state.tag,
       body: this.state.body,
-      uid: this.props.user.uid,
       imageURLs: this.state.imageURLs,
       timestamp: moment().valueOf(),
       subject: this.state.subject
     }
-    console.log('postData', postData)
     try {
-      console.log("WRiting a post")
       let key = database.ref().child('posts').child('general').push().key;
-      console.log('key', key)
       // Write the new post's data simultaneously in the posts list and the user's post list.
       var updates = {};
       updates[`/posts/general/${key}`] = postData;
@@ -176,14 +181,25 @@ class UnauthedAdd extends Component {
     }
   }
 
-  handleSectionChange (event) {
-    this.setState({section: event.target.value});
+  handleTagChange (event) {
+    this.setState({tag: event.target.value});
   }
   handleSubjectChange (event) {
     this.setState({subject: event.target.value});
   }
   handleBodyChange (event) {
     this.setState({body: event.target.value});
+  }
+  validateEmail (email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(email)
+  }
+  handleEmailChange (event) {
+    let email = event.target.value
+    this.setState({email: email, emailValid: this.validateEmail(email)})
+  }
+  handlePhoneChange (event) {
+    this.setState({phone: event.target.value});
   }
 
   render() {
@@ -205,34 +221,30 @@ class UnauthedAdd extends Component {
       {figures}
     </div>)
 
+    let emailHelpSpan
+    if (this.state.email) {
+      if (this.state.emailValid) {
+        emailHelpSpan = (<span className="help notsmall is-success">Email address OK</span>) 
+      } else {
+        emailHelpSpan = (<span className="help notsmall is-danger">Not an email address</span>)
+      } 
+    } else {
+      emailHelpSpan = (<span />)
+    }
+
     return (
-      <div>
-        <div className="hero is-medium is-danger is-bold">
-          <div className="hero-head">
-            <AuthNavbar />
-          </div>
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">
-                Add your two bits
-              </h1>
-              <h2 className="subtitle">
-                Be kind, rewind
-              </h2>
-            </div>
-          </div>
-        </div>
         <section className="section">
           <label className="label">Label</label>
           <p className="control">
             <span className="select">
-              <select value={this.state.section}
-                onChange={this.handleSectionChange.bind(this)}>
+              <select value={this.state.tag}
+                onChange={this.handleTagChange.bind(this)}>
                 <option value="">Select Dropdown</option>
                 <option value="news">Announcements</option>
-                <option value="freestuff">Free Stuff</option>
-                <option value="forsale">For Sale</option>
-                <option value="forbuy">Looking for…</option>
+                <option value="free stuff">Free Stuff</option>
+                <option value="for sale">For Sale</option>
+                <option value="looking for">Looking for…</option>
+                <option value="misc.">Miscellaneous</option>
               </select>
             </span>
           </p>
@@ -253,12 +265,28 @@ class UnauthedAdd extends Component {
             <input id="file" type="file" accept="image/*" onChange={this.onImageChange.bind(this)}/>
             {progress}
           </p>
-          <p className="control">
-            <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
-            <button className="button is-link" onClick={this.cancel.bind(this)}>Cancel</button>
-          </p>
+          <div className="notification">
+            <label className="label">Contact Info</label>
+            <p className="bottom-padding">If you want to be reachable (e.g. if you're selling something), enter email and/or phone.  We will only show these to users who are logged in.</p>
+            <label className="label">Your email address</label>
+            <p className="control">
+              <input className="input" type="text" placeholder="email address" onChange={this.handleEmailChange.bind(this)} />
+              {emailHelpSpan}
+            </p>
+            <label className="label">Your phone number</label>
+            <p className="control">
+              <input className="input" type="text" placeholder="phone number" onChange={this.handlePhoneChange.bind(this)} />
+            </p>
+          </div>
+          <div className="control is-grouped">
+            <p className="control">
+              <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
+            </p>
+            <p className="control">
+              <button className="button is-link" onClick={this.cancel.bind(this)}>Cancel</button>
+            </p>
+          </div>
         </section>
-      </div>
     );
   }
 }

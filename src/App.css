@@ -2,7 +2,6 @@
 /*@import 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700';*/
 @import "font-awesome.css";
 
-
 html {
   font-size: 16px;
 }
@@ -120,17 +119,6 @@ div .hero.is-primary a.nav-item, .hero.is-primary .nav-item a:not(.button) {
   margin-left: -2.5ex;
 }
 
-@media (max-width: 769px) {
-  section.section {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  section h1 {
-    padding-left: 1ex;
-    padding-right: 0;
-  }
-}
-
 @media (min-width: 400px) {
   .outgoing::after {
     content: " ⇢";
@@ -161,3 +149,11 @@ table.table.schedule tr.good td div {
   left: 3ex;
 }
 
+.bottom-padding {
+  padding-bottom: 1ex;
+
+}
+
+.help.notsmall {
+  font-size: inherit;
+}

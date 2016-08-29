@@ -9,19 +9,14 @@ class Navbar extends Component {
   }
 
   signin () {
-    // console.log("signing in", this.state, "this.user", this.user)
     this.setState({'showWidget': true})
-    // console.log(this.state)
     window.requestAnimationFrame(function() {
-      startFlow('#widget')
+      startFlow('.sign-in-widget')
     });
-
-    // removeClass(document.getElementById("widget"), "hidden");
   }
 
   signout () {
     signOut();
-    // this.onChange(false);
   }
 
   renderSignIn () { 
@@ -61,7 +56,7 @@ class Navbar extends Component {
   renderWidget () {
     // The start method will wait until the DOM is loaded.
     if (this.state.showWidget) { 
-      return (<div id="widget" />)
+      return (<div className="sign-in-widget" />)
     } else {
       return (<div />)
     }

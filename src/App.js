@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import './App.css';
 import 'classnames';
 import './bulma.css';
+import firebase from 'firebase'
 import { bindToItem } from "firebase-3-react";
 import {Router, Route, browserHistory, IndexRoute, Link } from "react-router";
 import {Ferry, NB2Vancouver, Vancouver2NB} from "./Ferry";
 import {AuthNavbar} from './authbar'
+import {authenticatedComponent} from './firebaseUtils.js'
 import {Add} from './add'
 import moment from 'moment';
 
@@ -13,70 +15,174 @@ if (navigator.serviceWorker) {
   navigator.serviceWorker.register('service-worker.js');
 }
 
-class Post extends React.Component {
+class unAuthedPost extends React.Component {
+  constructor () {
+    super()
+    this.state = {'showModal': false}
+  }
+
+  editPost () {
+
+  }
+
+  deletePost () {
+    this.setState({'showModal': true})
+  }
+  hideModal () {
+    this.setState({'showModal': false})
+  }
+  doDelete () {
+    console.log(this.props.firebaseref)
+    var database = firebase.database();
+    var updates = {};
+    let key = this.props.firebaseref
+    let newpost = this.props.post
+    newpost['hidden'] = 'deleted by user'
+    updates[`/posts/general/${key}`] = newpost;
+    database.ref().update(updates)
+    this.setState({'showModal': false})
+    //
+  }
+
+
   render () {
     let images = (<span />);
-    if (this.props.images) {
-      images = this.props.images.map(function(imageURL, index) {
+    if (this.props.post.imageURLs) {
+      images = this.props.post.imageURLs.map(function(imageURL, index) {
         return (
           <figure key={index} className="image is-4x3">
             <img src={imageURL} alt="placeholder" />
           </figure>
         )
       })
-      console.log(images)
     }
-    let time = this.props.timestamp ? moment(this.props.timestamp).fromNow() : ''
-    return (
-      <article className="media">
+    let time = this.props.post.timestamp ? moment(this.props.post.timestamp).fromNow() : ''
+    let tag
+    if (this.props.post.tag) {
+      let taglabel = this.props.post.tag
+      tag = (
+        <span className="level-item tag">
+          {taglabel}
+        </span>
+      )
+    } else {
+      tag = (<span />)
+    }
+    let editdeleteButtons
+    if (this.props.user && this.props.post.uid === this.props.user.uid) {
+      editdeleteButtons = (
+        <span>
+          <a className="level-item is-small is-info is-inverted button" onClick={this.editPost.bind(this)}>
+            <span className="icon">
+              <i className="fa fa-pencil"></i>
+            </span>
+            <span className="is-hidden-mobile" >edit</span>
+          </a>
+          <a className="level-item is-small is-info is-inverted button" onClick={this.deletePost.bind(this)}>
+            <span className="icon">
+              <i className="fa fa-trash"></i>
+            </span>
+            <span className="is-hidden-mobile" >delete</span>
+          </a>
+        </span>
+      )
+    } else {
+      editdeleteButtons = (<span />)
+    }
+
+    let post = (
         <div className="media-content">
           <div className="content">
-            <p>
-              <strong>{this.props.subject}</strong>
-            </p> 
+            <nav className="level is-mobile">
+              <div className="level-left">
+                <p className="level-item">
+                  <strong>{this.props.post.subject}</strong>
+                </p> 
+              </div>
+              <div className="level-right">
+                {tag}
+                {editdeleteButtons}
+              </div>
+            </nav>
           </div>
           <div className="content">
-            {this.props.body}
+            {this.props.post.body}
             <br /> 
             {images}
             <div className="level is-mobile">
-              <span className="level-item">{this.props.poster}</span>
+              <span className="level-item">{this.props.post.poster}</span>
               <span className="level-right right-align level-item">{time}</span>
             </div>
           </div>
-          <nav className="level">
-            <div className="level-left">
-                <a className="level-item is-primary is-inverted button">
-                  <span className="icon">
-                    <i className="fa fa-reply"></i>
-                  </span>
-                  <span className="is-hidden-mobile" >reply</span>
-                </a>
-                <a className="level-item is-primary is-inverted button">
-                  <span className="icon">
-                    <i className="fa fa-heart"></i>
-                  </span>
-                  <span className="is-hidden-mobile" >like</span>
-                </a>
-                <a className="level-item is-danger is-inverted button">
-                  <span className="icon">
-                    <i className="fa fa-flag"></i>
-                  </span>
-                  <span className="is-hidden-mobile" >flag</span>
-                </a>
-            </div>
-          </nav>
         </div>
+    )
+    let embedPost = (
+        <div className="media-content">
+          <div className="content">
+            <nav className="level is-mobile">
+              <div className="level-left">
+                <p className="level-item">
+                  <strong>{this.props.post.subject}</strong>
+                </p> 
+              </div>
+              <div className="level-right">
+                {tag}
+              </div>
+            </nav>
+          </div>
+          <div className="content">
+            {this.props.post.body}
+            <br /> 
+            {images}
+            <div className="level is-mobile">
+              <span className="level-item">{this.props.post.poster}</span>
+              <span className="level-right right-align level-item">{time}</span>
+            </div>
+          </div>
+        </div>
+    )
+
+    let deleteConfirm
+    if (this.state.showModal) {
+      deleteConfirm = (
+        <div className="modal is-active">
+          <div className="modal-background"></div>
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title">Are you sure you want to remove this post?</p>
+              <button onClick={this.hideModal.bind(this)} className="delete"></button>
+            </header>
+            <section className="modal-card-body">
+              {embedPost}
+            </section>
+            <footer className="modal-card-foot">
+              <a onClick={this.doDelete.bind(this)} className="button is-primary">Delete post</a>
+              <a onClick={this.hideModal.bind(this)} className="button">Cancel</a>
+            </footer>
+          </div>
+        </div>
+      )
+    } else {
+      deleteConfirm = (<span />)
+    }
+
+
+
+    return (
+      <article className="media">
+        {post}
+        {deleteConfirm}
       </article>
     )
   }
 }
 
-Post.propTypes = {
-  poster: React.PropTypes.string.isRequired,
-  subject: React.PropTypes.string.isRequired,
-  body: React.PropTypes.string.isRequired
+unAuthedPost.propTypes = {
+  post: React.PropTypes.object.isRequired,
+  firebaseref: React.PropTypes.string.isRequired,
 };
+
+let Post = authenticatedComponent(unAuthedPost)
 
 class PostList extends React.Component {
    render () {
@@ -84,9 +190,15 @@ class PostList extends React.Component {
      if (! posts) {
       return (<div />)
      }  
-     let items = Object.keys(posts).map((id: string) => {
+    // this will hide any posts that are marked as 'hidden' (whether by user, admin, etc.)
+     let unhiddenkeys = Object.keys(posts).filter((id) => {
+       return ! posts[id].hidden
+     })
+
+     let items = unhiddenkeys.map((id) => {
        const post = posts[id];
-       return <Post key={id} poster={post.poster} subject={post.subject} body={post.body} images={post.imageURLs} timestamp={post.timestamp}/>
+       console.log("id", id)
+       return <Post key={id} firebaseref={id} post={post}/>
      });
 
      items = items.reverse()
@@ -155,8 +267,37 @@ class News extends Component {
   }
 }
 
-class Posts extends Component {
+class UnauthedPosts extends Component {
+  constructor () {
+    super()
+    this.state = {
+      'showForm': false
+    }
+  }
+
+  showForm () {
+    this.setState({showForm: true})
+  }
+
   render () {
+    let buttonOrForm
+    if (this.state.showForm) {
+      if (this.props.user) {
+        buttonOrForm = (<Add/>)
+      } else {
+        buttonOrForm = (<div> you must log in </div>)
+      }
+    } else {
+      buttonOrForm = (
+        <button className="button is-large is-primary" style={{width: "100%"}} onClick={this.showForm.bind(this)}>
+          <span className="icon">
+            <i className="fa fa-plus"></i>
+          </span>
+          <span>add new entry</span>
+        </button>
+      )
+    }
+
     return (
       <div>
         <div className="hero is-medium is-primary is-bold">
@@ -175,17 +316,13 @@ class Posts extends Component {
           </div>
         </div>
         <BoundPostList label='General Posts' firebaseRef='posts/general' />
-        <Link className="button is-large is-primary" style={{width: "100%"}} to="/add">
-          <span className="icon">
-            <i className="fa fa-plus"></i>
-          </span>
-          <span>add new entry</span>
-        </Link>
+        {buttonOrForm}
       </div>
     )
   }
 }
 
+export let Posts = authenticatedComponent(UnauthedPosts)
 
 class Links extends Component {
   render () {
@@ -300,18 +437,6 @@ class Home extends Component {
     );
   }
 }
-
-            // <BoundCategories firebaseRef="sectionsMeta" />
-            // <div className="control is-grouped">
-            // <p className="control">
-            //   <a className="button" href="/add">
-            //     <span className="icon">
-            //       <i className="fa fa-plus"></i>
-            //     </span>
-            //     <span> add post</span>
-            //   </a>
-            //   </p>
-            // </div>
 
 class App extends Component {
   render() {
