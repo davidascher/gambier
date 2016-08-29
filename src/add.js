@@ -14,9 +14,11 @@ var storage = firebase.storage();
 var storageRef = storage.ref();
 
 class UnauthedAdd extends Component {
+
   constructor () {
     super()
     this.state = {
+      'showForm': false,
       'subject': '',
       'body': '',
       'tag': '',
@@ -146,7 +148,7 @@ class UnauthedAdd extends Component {
   }
   
   cancel () {
-    window.history.back();
+    this.setState({showForm: false})
   }
 
   submit () {
@@ -179,6 +181,7 @@ class UnauthedAdd extends Component {
     } catch (e) {
       console.log(e)
     }
+    this.setState({showForm: false})
   }
 
   handleTagChange (event) {
@@ -198,11 +201,44 @@ class UnauthedAdd extends Component {
     let email = event.target.value
     this.setState({email: email, emailValid: this.validateEmail(email)})
   }
+
   handlePhoneChange (event) {
     this.setState({phone: event.target.value});
   }
 
+  hideModal () {
+    this.setState({showForm: false})
+  }
+
+  showForm () {
+    this.setState({showForm: true})
+  }
+
   render() {
+    if (! this.state.showForm) {
+      return (
+        <section className="section">
+          <div className="container">
+            <div className="columns">
+              <div className="column">
+                <div className="control-group">
+                  <button className="control button is-large is-primary" style={{width: "100%"}} onClick={this.showForm.bind(this)}>
+                    <span className="icon">
+                      <i className="fa fa-plus"></i>
+                    </span>
+                    <span>add new entry</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
+    if (! this.props.user) {
+      return (<div> you must log in </div>)
+    }
+
     let progress;
     if (this.state.loading) {
       let progressState = this.state.progressState
@@ -233,8 +269,15 @@ class UnauthedAdd extends Component {
     }
 
     return (
-        <section className="section">
-          <label className="label">Label</label>
+        <div className="modal is-active">
+          <div className="modal-background"></div>
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title">New Post</p>
+              <button onClick={this.hideModal.bind(this)} className="delete"></button>
+            </header>
+            <section className="modal-card-body">
+          <label className="label">Category</label>
           <p className="control">
             <span className="select">
               <select value={this.state.tag}
@@ -278,17 +321,25 @@ class UnauthedAdd extends Component {
               <input className="input" type="text" placeholder="phone number" onChange={this.handlePhoneChange.bind(this)} />
             </p>
           </div>
-          <div className="control is-grouped">
-            <p className="control">
-              <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
-            </p>
-            <p className="control">
-              <button className="button is-link" onClick={this.cancel.bind(this)}>Cancel</button>
-            </p>
+          </section>
+            <footer className="modal-card-foot">
+              <div className="control is-grouped">
+                <p className="control">
+                  <button className="button is-primary" onClick={this.submit.bind(this)}>Submit</button>
+                </p>
+                <p className="control">
+                  <button className="button is-link" onClick={this.cancel.bind(this)}>Cancel</button>
+                </p>
+              </div>
+            </footer>
           </div>
-        </section>
+        </div>
     );
   }
 }
+              // <a onClick={this.doDelete.bind(this)} className="button is-primary">Delete post</a>
+              // <a onClick={this.hideModal.bind(this)} className="button">Cancel</a>
+
+
 export let Add = authenticatedComponent(UnauthedAdd)
 

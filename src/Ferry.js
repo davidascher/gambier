@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import {AuthNavbar} from './authbar'
+import Footer from './Footer'
 
 const Ndays = 10
 
@@ -464,6 +465,7 @@ export class Ferry extends Component {
         {directiontable}
         {infoNote}
       </section>
+      <Footer />
     </div>
     )
   }
