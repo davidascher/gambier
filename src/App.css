@@ -64,7 +64,7 @@ div .hero.is-primary a.nav-item, .hero.is-primary .nav-item a:not(.button) {
 }
 
 .welcome-image {
-  background-image: url('https://firebasestorage.googleapis.com/v0/b/gambier-630d6.appspot.com/o/dock_dark.jpg?alt=media&token=550989af-e5a5-4bf8-b09d-ecc2985e0f24'); 
+  background-image: url('./images/dock_dark_compressed.jpg'); 
   background-size: cover;
   /*padding: 2em;*/
 }

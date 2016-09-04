@@ -49,17 +49,43 @@ let Sun_van2nb_1 = [
   ["4:30 PM", "5:15 PM", "5:25 PM"],
   ["5:50 PM", "6:40 PM", "6:50 PM"]
 ] 
-let MTuWeTh_van2nb_2 = [
+
+let Fri_Sep_9_16_23 = [
+  ["7:20 AM", "8:10 AM ▲", "8:40 AM"],
+  ["9:25 AM", "10:10 AM ▲", "10:20 AM"],
+  ["11:30 AM", "12:15 PM ▲", "12:25 PM"],
+  ["2:10 PM", "3:00 PM", "3:10 PM"],
+  ["3:50 PM", "4:35 PM ▲", "4:45 PM"],
+  ["4:20 PM", "6:05 PM", "6:10 PM"],
+  ["5:50 PM", "6:40 PM ▲", "6:60 PM"]
 
 ]
-let Fri_van2nb_2 = [
 
-] 
-let Sat_van2nb_2 = [
-  
-] 
+let Sun_Sep_11_18_25 = [
+  ["7:20 AM", "8:10 AM ▲", "8:40 AM"],
+  ["9:25 AM", "10:10 AM ▲", "10:20 AM"],
+  ["11:30 AM", "12:15 PM ▲", "12:25 PM"],
+  ["1:35 PM", "3:00 PM", "3:10 PM"],
+  ["3:50 PM", "4:35 PM ▲", "4:45 PM"],
+  ["4:20 PM", "6:05 PM", "6:10 PM"],
+  ["5:50 PM", "6:40 PM ▲", "6:60 PM"]
+]
+
+let MTuWeThFriSat_van2nb_2 = [
+  ["7:20 AM", "8:10 AM ▲", "8:40 AM"],
+  ["9:25 AM", "10:10 AM ▲", "10:20 AM"],
+  ["11:30 AM", "12:15 PM ▲", "12:25 PM"],
+  ["1:35 PM", "3:00 PM", "3:10 PM"],
+  ["3:50 PM", "4:35 PM ▲", "4:45 PM"],
+  ["5:50 PM", "6:40 PM ▲", "6:60 PM"]
+]
 let Sun_van2nb_2 = [
-
+  ["7:20 AM", "8:10 AM ▲", "8:40 AM"],
+  ["9:25 AM", "10:10 AM ▲", "10:20 AM"],
+  ["11:30 AM", "12:15 PM ▲", "12:25 PM"],
+  ["3:50 PM", "4:35 PM ▲", "4:45 PM"],
+  ["4:20 PM", "6:05 PM", "6:10 PM"],
+  ["5:50 PM", "6:40 PM ▲", "6:60 PM"]
 ] 
 
 let MTh_nb2van_1 = [
@@ -202,14 +228,19 @@ let data =
       'from': 'September 6, 2016',
       'to': 'October 10, 2016',
       'schedule': {
-        monday: MTuWeTh_van2nb_2,
-        tuesday: MTuWeTh_van2nb_2,
-        wednesday: MTuWeTh_van2nb_2,
-        thursday: MTuWeTh_van2nb_2,
-        friday: Fri_van2nb_2,
-        saturday: Sat_van2nb_2, 
+        monday: MTuWeThFriSat_van2nb_2,
+        tuesday: MTuWeThFriSat_van2nb_2,
+        wednesday: MTuWeThFriSat_van2nb_2,
+        thursday: MTuWeThFriSat_van2nb_2,
+        friday: MTuWeThFriSat_van2nb_2,
+        saturday: MTuWeThFriSat_van2nb_2, 
         sunday: Sun_van2nb_2,
-        "October 10, 2016": Sun_van2nb_2
+        "September 9, 2016": Fri_Sep_9_16_23,
+        "September 16, 2016": Fri_Sep_9_16_23,
+        "September 23, 2016": Fri_Sep_9_16_23,
+        "September 11, 2016": Sun_Sep_11_18_25,
+        "September 18, 2016": Sun_Sep_11_18_25,
+        "September 25, 2016": Sun_Sep_11_18_25
       }
     }    
   ]
@@ -393,6 +424,7 @@ export class Ferry extends Component {
             </div>
             <div className="message-body">
               <ul>
+                <li>▲ indicates a connection that will wait for the incoming ferry</li>
                 <li>The <strong>bold rows</strong> indicates a layover shorter than 35 minutes.</li>
                 <li>The ferry trip between Horseshoe Bay and Langdale takes 40 minutes, and is free going back to Horseshoe Bay.</li>
                 <li>The <em>Stormaway</em> trip between Langdale and New Brighton takes 10 minutes or more, paid both ways.</li>
